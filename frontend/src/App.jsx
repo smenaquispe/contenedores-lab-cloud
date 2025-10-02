@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import './App.css';
+import config from './config';
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -12,6 +13,8 @@ function App() {
   const [showDebug, setShowDebug] = useState(false);
   const [debugData, setDebugData] = useState(null);
 
+  const API_URL = config.API_URL;
+
   useEffect(() => {
     fetchTodos();
   }, []);
@@ -19,7 +22,7 @@ function App() {
   const fetchTodos = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:5000/todos");
+      const res = await fetch(`${API_URL}/todos`);
       if (!res.ok) throw new Error('Failed to fetch todos');
       const data = await res.json();
       setTodos(data);
@@ -36,7 +39,7 @@ function App() {
     if (!task.trim()) return;
     
     try {
-      const res = await fetch("http://localhost:5000/todos", {
+      const res = await fetch(`${API_URL}/todos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ task }),
@@ -53,7 +56,7 @@ function App() {
 
   const deleteTodo = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/todos/${id}`, {
+      const res = await fetch(`${API_URL}/todos/${id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error('Failed to delete todo');
@@ -66,7 +69,7 @@ function App() {
 
   const toggleTodo = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/todos/${id}/toggle`, {
+      const res = await fetch(`${API_URL}/todos/${id}/toggle`, {
         method: "PATCH",
       });
       if (!res.ok) throw new Error('Failed to toggle todo');
@@ -89,7 +92,7 @@ function App() {
     if (!editTask.trim()) return;
     
     try {
-      const res = await fetch(`http://localhost:5000/todos/${editingId}`, {
+      const res = await fetch(`${API_URL}/todos/${editingId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ task: editTask }),
@@ -115,8 +118,8 @@ function App() {
   const fetchDebugData = async () => {
     try {
       const [queriesRes, statsRes] = await Promise.all([
-        fetch("http://localhost:5000/debug/queries"),
-        fetch("http://localhost:5000/debug/stats")
+        fetch(`${API_URL}/debug/queries`),
+        fetch(`${API_URL}/debug/stats`)
       ]);
       const queries = await queriesRes.json();
       const stats = await statsRes.json();
@@ -128,7 +131,7 @@ function App() {
 
   const clearQueryLog = async () => {
     try {
-      await fetch("http://localhost:5000/debug/queries", { method: "DELETE" });
+      await fetch(`${API_URL}/debug/queries`, { method: "DELETE" });
       fetchDebugData();
     } catch (err) {
       setError("Error clearing query log: " + err.message);
