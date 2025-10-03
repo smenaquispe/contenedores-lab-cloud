@@ -20,3 +20,4 @@ docker-compose up --build
 
 kubectl port-forward service/todo-backend 5000:5000 &
 kubectl port-forward service/todo-frontend 30080:5173 &
+kubectl port-forward svc/monitoring-grafana -n monitoring 3000:80
