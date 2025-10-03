@@ -17,3 +17,6 @@ Este proyecto es una aplicación simple de To Do List compuesta por **3 contened
 ```bash
 docker-compose up --build
 ```
+
+kubectl port-forward service/todo-backend 5000:5000 &
+kubectl port-forward service/todo-frontend 30080:5173 &
